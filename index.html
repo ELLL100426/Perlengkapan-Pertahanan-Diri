@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Etalase Museum</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: transparent;
+        }
+
+        .gallery-container {
+            max-width: 400px;
+            /* Menyesuaikan lebar di dalam popup Lapentor */
+            margin: auto;
+            text-align: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Container khusus gambar biar tombol bisa nempel di kiri-kanannya */
+        .image-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            max-width: 356px;
+            border-radius: 8px;
+            object-fit: cover;
+            /* Tambahan transisi biar pergantian gambar lebih smooth */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Desain tombol navigasi */
+        .btn-nav {
+            position: absolute;
+            background-color: rgba(211, 84, 0, 0.85);
+            /* Sedikit transparan */
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+            /* Biar tombol selalu ada di atas gambar */
+        }
+
+        .btn-nav:hover {
+            background-color: rgba(160, 64, 0, 1);
+        }
+
+        /* Set posisi tombol tepat di kiri dan kanan gambar */
+        .prev {
+            left: 5px;
+        }
+
+        .next {
+            right: 5px;
+        }
+
+        .slide-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="gallery-container">
+        <!-- Judul akan berubah otomatis -->
+        <div class="slide-title" id="judul-hewan">Memuat...</div>
+
+        <div class="image-wrapper">
+            <!-- Tombol Before / Prev -->
+            <button class="btn-nav prev" id="btn-prev" onclick="gantiSlide(-1)">&#10094;</button>
+
+            <!-- Gambar utama -->
+            <img id="gambar-hewan" src="" alt="Koleksi Museum">
+
+            <!-- Tombol Next -->
+            <button class="btn-nav next" id="btn-next" onclick="gantiSlide(1)">&#10095;</button>
+        </div>
+
+        <!-- Keterangan akan berubah otomatis -->
+        <div class="slide-desc" id="keterangan-hewan">Memuat keterangan...</div>
+    </div>
+
+    <script>
+        // 1. Tempat lu masukin Judul, Link Gambar, dan Keterangan
+        // Cukup edit teks di dalam tanda kutip ini aja ya
+        const koleksiData = [
+            {
+                judul: "Tabung Anak Sumpit,Tombak Sumpit dan Perisai",
+                gambar: "Tabung_anakPanah_tombak_sumpit_dan_perisai.jpg",
+                keterangan: `Tabung anak sumpit terbuat dari bambu (aur), yang diberi tutup dan terdapat cantelan yang diikatkan pada bagian tengah tabung. Kegunaannya untuk menyimpan damak (mata sumpit) sewaktu berburu. Ujung mata sumpit kadangkala diberi racun yang mematikan korban. Ukuran : T = 38 cm
+                
+                            Sumpit terbuat dari sebatang kayu yang dilubangi bagian dalamnya ± 1 cm, diujungnya diberi mata tombak kecil dari besi baja dan dililit tali rotan yang berfungsi sebagai penguat mata tombak. Digunakan ketika berburu hewan atau berperang, Tombak sumpit juga digunakan oleh kaum pria sebagai simbol bisa melindungi keluarganya dari marabahaya yang mengancam. Ukuran : P = 186 cm
+                            
+                            Terbuat dari kayu, bentuk persegi panjang dengan kedua ujung lancip. Pada bagian luar diberi hiasan berupa potongan-potongan rotan yang dipasang horizontal sebanyak sepuluh buah masing-masing lima di atas, lima di bawah dan diikat dengan anyaman rotan berbentuk seperti rangkaian motif tumpal. Pada bagian tengah diperkuat dengan sebatang rotana, sedangkan bagian dalam terdapat pegangan. Digunakan sebagai perlengkapan pertahanan diri saat berperang melawan musuh. Ukuran : P = 135 cm L = 38 cm`
+            },
+            {
+                judul: "Tangkin (Parang)",
+                gambar: "parang.jpg",
+                keterangan: "Tangkin ini adalah jenis parang yang dibuat dari lempengan besi yang ditempa berbentuk pipih panjang berujung lebar agak serong. Hulunya/gagang melengkung ke atas. Hulu/gagang terbuat dari kayu diperkuat dengan anyaman rotan, sarung juga terbuat dari kayu dan diperkuat dengan anyaman rotan. Digunakan untuk berladang seperti menebas dan memotong kayu, rumput dan juga sebagai senjata sehari-hari. Ukuran : P = 54 cm"
+            },
+            {
+                judul: "Baju Kapuak",
+                gambar: "baju_kapuak.jpg",
+                keterangan: "Pakaian ini terbuat dari kulit kayu kapuak/ampura. Kulit kayu dipukul-pukul agak menjadi lunak sehingga dapat digulung atau dilipat. Selembar kulit kayu dibentuk menjadi baju, cawat dan topi, kemudian diberi berbagai hiasan dari kuli kayu yang dilekat dengan memakai lem getah kayu. Baju berbentuk rompi, bagian tengah diberi tiga buah kancing berupa tali. Cawat berbentuk persegi empat, bagian depan dan belakang bertutup jumbai. Topi berbentuk bulat, terbuka bagian atas dan bawah. Seluruh pakaian dilukis dengan motif manusia, geometris dan lain-lain dari getah kayu warna merah yang melambangkan rasa kekompakkan dan persatuan dalam keberanian membela kebenaran. Gambaran manusia melambangkan pemberi semangat kepada pemakainya. Pakaian seperti ini hanya digunakan pada waktu tertentu saja misalnya saat berperang melawan musuh ataupun untuk upacara yang bersifat religius. Ukuran : Baju : P = 58 cm L = 44 cm Rok : P = 58 cm L = 48 cm"
+            },
+            {
+                judul: "Mandau",
+                gambar: "mandau.jpg",
+                keterangan: "Terbuat dari kayu, bentuk persegi panjang dengan kedua ujung lancip. Pada bagian luar diberi hiasan berupa potongan-potongan rotan yang dipasang horizontal sebanyak sepuluh buah masing-masing lima di atas, lima di bawah dan diikat dengan anyaman rotan berbentuk seperti rangkaian motif tumpal. Pada bagian tengah diperkuat dengan sebatang rotana, sedangkan bagian dalam terdapat pegangan. Digunakan sebagai perlengkapan pertahanan diri saat berperang melawan musuh. Ukuran : P = 135 cm L = 38 cm"
+            }
+        ];
+
+        let indexSekarang = 0;
+
+        // Ambil elemen HTML yang akan dimanipulasi
+        const elemenJudul = document.getElementById('judul-hewan');
+        const elemenGambar = document.getElementById('gambar-hewan');
+        const elemenKeterangan = document.getElementById('keterangan-hewan');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function updateTampilan() {
+            // Ganti konten sesuai data array
+            elemenJudul.innerText = koleksiData[indexSekarang].judul;
+            elemenGambar.src = koleksiData[indexSekarang].gambar;
+            elemenKeterangan.innerText = koleksiData[indexSekarang].keterangan;
+
+            // Logika sesuai revisi dosen:
+            // Sembunyikan tombol Prev jika sedang di gambar urutan pertama (index 0)
+            if (indexSekarang === 0) {
+                btnPrev.style.display = 'none';
+            } else {
+                btnPrev.style.display = 'flex';
+            }
+
+            // Sembunyikan tombol Next jika sedang di gambar urutan terakhir
+            if (indexSekarang === koleksiData.length - 1) {
+                btnNext.style.display = 'none';
+            } else {
+                btnNext.style.display = 'flex';
+            }
+        }
+
+        function gantiSlide(arah) {
+            indexSekarang += arah;
+            updateTampilan();
+        }
+
+        // Jalankan fungsi saat web pertama kali dirender
+        updateTampilan();
+    </script>
+
+</body>
+
+</html>
